@@ -75,7 +75,7 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                 {/* Wishlist dropdown */}
                 {isWishlistOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg p-3 z-50 max-h-64 overflow-auto text-amber-950">
-                    <h4 className="font-semibold mb-2">Wishlist Items</h4>
+                    <h4 className="font-semibold mb-2">Wishlist</h4>
                     {wishlistItems.length === 0 ? (
                       <p className="text-sm text-gray-500">No items in wishlist</p>
                     ) : (
@@ -120,7 +120,7 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                 {/* Cart dropdown */}
                 {isCartOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg p-3 z-50 max-h-64 overflow-auto text-amber-950">
-                    <h4 className="font-semibold mb-2">Cart Items</h4>
+                    <h4 className="font-semibold mb-2">Items</h4>
                     {cartItems.length === 0 ? (
                       <p className="text-sm text-gray-500">No items in cart</p>
                     ) : (
