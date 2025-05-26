@@ -6,6 +6,7 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [localCartItems, setLocalCartItems] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +15,40 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Initialize local cart with quantity if not present
+    const updated = cartItems.map((item) => ({
+      ...item,
+      quantity: item.quantity || 1,
+    }));
+    setLocalCartItems(updated);
+  }, [cartItems]);
+
+  const handleQuantityChange = (id, delta) => {
+    const updated = localCartItems.map((item) =>
+      item.id === id
+        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+        : item
+    );
+    setLocalCartItems(updated);
+  };
+
+  const calculateItemTotal = (item) => {
+    return (
+      item.quantity * item.price * 133 * (1 - item.discount / 100)
+    ).toFixed(0);
+  };
+
+  const calculateGrandTotal = () => {
+    return localCartItems
+      .reduce(
+        (sum, item) =>
+          sum + item.quantity * item.price * 133 * (1 - item.discount / 100),
+        0
+      )
+      .toFixed(0);
+  };
 
   const navItems = [
     { id: 1, name: "Home", link: "#home" },
@@ -26,13 +61,15 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
 
   return (
     <header className="sticky top-0 z-50 transition-all duration-300">
-      <div className={`w-full ${isScrolled ? "bg-gray-100/95 backdrop:blur shadow-md py-2" : "bg-gray-100 py-4"}`}>
+      <div
+        className={`w-full ${
+          isScrolled ? "bg-gray-100/95 backdrop:blur shadow-md py-2" : "bg-gray-100 py-4"
+        }`}
+      >
         <div className="max-w-full mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
             <div className="flex justify-between items-center w-full md:w-auto">
-              <a href="/" className="text-2xl font-bold text-pink-600">
-                Aromara
-              </a>
+              <a href="/" className="text-2xl font-bold text-pink-600">Aromara</a>
               <button
                 className="md:hidden text-gray-700 hover:text-indigo-600"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -41,6 +78,8 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                 <FiMenu size={24} />
               </button>
             </div>
+
+            {/* Search bar */}
             <div className="w-full md:flex-1 max-w-sm">
               <div className="relative w-full">
                 <input
@@ -53,8 +92,10 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                 </button>
               </div>
             </div>
+
+            {/* Right icons */}
             <div className="flex items-center justify-end space-x-4 w-full md:w-auto relative">
-              {/* Wishlist Button with dropdown */}
+              {/* Wishlist */}
               <div className="relative">
                 <button
                   className="relative p-2 text-gray-700 hover:text-pink-600"
@@ -71,8 +112,6 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                     </span>
                   )}
                 </button>
-
-                {/* Wishlist dropdown */}
                 {isWishlistOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg p-3 z-50 max-h-64 overflow-auto text-amber-950">
                     <h4 className="font-semibold mb-2">Wishlist</h4>
@@ -99,7 +138,7 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                 )}
               </div>
 
-              {/* Cart Button with dropdown */}
+              {/* Cart */}
               <div className="relative">
                 <button
                   className="relative p-2 text-gray-700 hover:text-pink-600"
@@ -117,28 +156,53 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
                   )}
                 </button>
 
-                {/* Cart dropdown */}
                 {isCartOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg p-3 z-50 max-h-64 overflow-auto text-amber-950">
-                    <h4 className="font-semibold mb-2">Items</h4>
-                    {cartItems.length === 0 ? (
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg p-3 z-50 max-h-80 overflow-auto text-amber-950">
+                    <h4 className="font-semibold mb-2">Cart</h4>
+                    {localCartItems.length === 0 ? (
                       <p className="text-sm text-gray-500">No items in cart</p>
                     ) : (
-                      <ul>
-                        {cartItems.map((item) => (
-                          <li key={item.id} className="mb-2 border-b border-gray-200 pb-1">
-                            <div className="flex items-center space-x-3">
-                              <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
-                              <div>
-                                <p className="font-medium">{item.name}</p>
-                                <p className="text-sm text-gray-500">
-                                  Rs.{(item.price * 133 * (1 - item.discount / 100)).toFixed(0)}
-                                </p>
+                      <>
+                        <ul>
+                          {localCartItems.map((item) => (
+                            <li key={item.id} className="mb-3 border-b border-gray-200 pb-2">
+                              <div className="flex items-center space-x-3">
+                                <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
+                                <div className="flex-1">
+                                  <p className="font-medium">{item.name}</p>
+                                  <p className="text-sm text-gray-500">
+                                    Rs.{(item.price * 133 * (1 - item.discount / 100)).toFixed(0)} × {item.quantity}
+                                  </p>
+                                  <p className="text-sm font-semibold">
+                                    Total: Rs.{calculateItemTotal(item)}
+                                  </p>
+                                  <div className="flex items-center mt-1 space-x-2">
+                                    <button
+                                      className="px-2 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                                      onClick={() => handleQuantityChange(item.id, -1)}
+                                    >
+                                      -
+                                    </button>
+                                    <span>{item.quantity}</span>
+                                    <button
+                                      className="px-2 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                                      onClick={() => handleQuantityChange(item.id, 1)}
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="mt-3 pt-2 border-t border-gray-200">
+                          <p className="font-semibold mb-2">Grand Total: Rs.{calculateGrandTotal()}</p>
+                          <button className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition">
+                            Checkout
+                          </button>
+                        </div>
+                      </>
                     )}
                   </div>
                 )}
@@ -151,6 +215,8 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
           </div>
         </div>
       </div>
+
+      {/* Navigation bar */}
       <div className="bg-pink-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="hidden md:flex justify-center py-3">
@@ -180,5 +246,3 @@ const Header = ({ wishlistCount, cartCount, wishlistItems, cartItems }) => {
 };
 
 export default Header;
-
-
