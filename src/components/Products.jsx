@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import product from '../assets/product.png';
 import product1 from '../assets/product1.png';
 import product2 from '../assets/product2.png';
@@ -12,6 +13,7 @@ import { FiChevronLeft, FiChevronRight, FiHeart, FiShoppingCart, FiStar } from '
 const Products = ({ wishlistItems, setWishlistItems, cartItems, setCartItems }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productsPerPage, setProductsPerPage] = useState(4);
+  const navigate = useNavigate(); 
 
   const products = [
     { id: 1, name: 'Floral', price: 49.99, rating: 4.5, image: product, discount: 20 },
@@ -56,7 +58,6 @@ const Products = ({ wishlistItems, setWishlistItems, cartItems, setCartItems }) 
     (currentSlide + 1) * productsPerPage
   );
 
-  // Toggle wishlist status
   const toggleWishlist = (id) => {
     setWishlistItems((prev) => {
       const updated = new Set(prev);
@@ -69,7 +70,6 @@ const Products = ({ wishlistItems, setWishlistItems, cartItems, setCartItems }) 
     });
   };
 
-  // Toggle cart status
   const toggleCart = (id) => {
     setCartItems((prev) => {
       const updated = new Set(prev);
@@ -165,7 +165,10 @@ const Products = ({ wishlistItems, setWishlistItems, cartItems, setCartItems }) 
                       <FiShoppingCart size={18} />
                     </button>
                   </div>
-                  <button className='w-full mt-2 py-2 text-sm font-medium text-white bg-pink-950 hover:bg-pink-700 rounded-lg transition-colors'>
+                  <button
+                    onClick={() => navigate(`/buy/${product.id}`)}
+                    className='w-full mt-2 py-2 text-sm font-medium text-white bg-pink-950 hover:bg-pink-700 rounded-lg transition-colors'
+                  >
                     Buy Now
                   </button>
                 </div>
