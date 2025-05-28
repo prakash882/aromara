@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Products from './Products';
 import Footer from './Footer';
-import productImg from '../assets/product.png';
+import product from '../assets/product.png';
 import product1 from '../assets/product1.png';
 import product2 from '../assets/product2.png';
 import product3 from '../assets/product3.png';
@@ -13,7 +13,7 @@ import product7 from '../assets/product7.png';
 import { FiStar } from 'react-icons/fi';
 
 const products = [
-  { id: 1, name: 'Floral', price: 49.99, rating: 4.5, image: productImg, discount: 20, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
+  { id: 1, name: 'Floral', price: 49.99, rating: 4.5, image: product, discount: 20, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
   { id: 2, name: 'Oriental', price: 59.99, rating: 4.6, image: product1, discount: 15, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
   { id: 3, name: 'Woody', price: 59.99, rating: 4.7, image: product2, discount: 10, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
   { id: 4, name: 'Fruity', price: 69.99, rating: 4.8, image: product3, discount: 0, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
@@ -79,7 +79,7 @@ const BuyNow = () => {
 
             <div className="flex space-x-6">
               <button
-                onClick={() => alert(`Purchased ${product.name}!`)}
+                onClick={() => navigate('/checkout', { state: { product } })}
                 className="bg-pink-700 hover:bg-pink-900 text-white px-8 py-3 rounded-md font-semibold text-lg"
               >
                 Buy

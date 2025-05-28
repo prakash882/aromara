@@ -10,6 +10,7 @@ import Hero from "./components/Hero";
 import Offers from "./components/Offers";
 import Products from "./components/Products";
 import BuyNow from "./components/BuyNow";
+import CheckOut from "./components/CheckOut";
 
 import product from './assets/product.png';
 import product1 from './assets/product1.png';
@@ -23,7 +24,7 @@ import product7 from './assets/product7.png';
 const App = () => {
   const [wishlistItems, setWishlistItems] = useState(new Set());
   const [cartItems, setCartItems] = useState(new Set());
-  
+
   const products = [
     { id: 1, name: "Floral", price: 49.99, rating: 4.5, image: product, discount: 20 },
     { id: 2, name: "Oriental", price: 59.99, rating: 4.6, image: product1, discount: 15 },
@@ -35,9 +36,8 @@ const App = () => {
     { id: 8, name: "Leathery", price: 59.99, rating: 4.7, image: product7, discount: 10 },
   ];
 
-
-  const wishlistProducts = products.filter(p => wishlistItems.has(p.id));
-  const cartProducts = products.filter(p => cartItems.has(p.id));
+  const wishlistProducts = products.filter((p) => wishlistItems.has(p.id));
+  const cartProducts = products.filter((p) => cartItems.has(p.id));
 
   return (
     <Router>
@@ -72,10 +72,27 @@ const App = () => {
 
         <Route
           path="/buy/:id"
+          element={<BuyNow />}
+        />
+
+        <Route
+          path="/checkout"
+          element={<CheckOut />}
+        />
+
+        <Route
+          path="/products"
           element={
-            <BuyNow
-              products={products}
-            />
+            <>
+              <Products
+                products={products}
+                wishlistItems={wishlistItems}
+                setWishlistItems={setWishlistItems}
+                cartItems={cartItems}
+                setCartItems={setCartItems}
+              />
+              <Footer />
+            </>
           }
         />
       </Routes>
