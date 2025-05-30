@@ -36,8 +36,12 @@ const App = () => {
     { id: 8, name: "Leathery", price: 59.99, rating: 4.7, image: product7, discount: 10 },
   ];
 
-  const wishlistProducts = products.filter((p) => wishlistItems.has(p.id));
-  const cartProducts = products.filter((p) => cartItems.has(p.id));
+  // Filter products for wishlist and cart based on IDs in Sets
+  const wishlistProducts = products.filter(p => wishlistItems.has(p.id));
+  // Add quantity for cartProducts, default 1
+  const cartProducts = products
+    .filter(p => cartItems.has(p.id))
+    .map(p => ({ ...p, quantity: 1 }));
 
   return (
     <Router>
@@ -46,6 +50,8 @@ const App = () => {
         cartCount={cartItems.size}
         wishlistItems={wishlistProducts}
         cartItems={cartProducts}
+        setCartItems={setCartItems}
+        rawCartItemsSet={cartItems}
       />
 
       <Routes>
@@ -70,15 +76,8 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/buy/:id"
-          element={<BuyNow />}
-        />
-
-        <Route
-          path="/checkout"
-          element={<CheckOut />}
-        />
+        <Route path="/buy/:id" element={<BuyNow />} />
+        <Route path="/checkout" element={<CheckOut />} />
 
         <Route
           path="/products"
