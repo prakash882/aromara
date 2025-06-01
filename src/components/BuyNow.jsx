@@ -13,24 +13,24 @@ import product7 from '../assets/product7.png';
 import { FiStar } from 'react-icons/fi';
 
 const products = [
-  { id: 1, name: 'Floral', price: 49.99, rating: 4.5, image: product, discount: 20, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 2, name: 'Oriental', price: 59.99, rating: 4.6, image: product1, discount: 15, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 3, name: 'Woody', price: 59.99, rating: 4.7, image: product2, discount: 10, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 4, name: 'Fruity', price: 69.99, rating: 4.8, image: product3, discount: 0, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 5, name: 'Citrus', price: 69.99, rating: 4.8, image: product4, discount: 0, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 6, name: 'Aromatic', price: 49.99, rating: 4.4, image: product5, discount: 10, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 7, name: 'Chypre', price: 59.99, rating: 4.6, image: product6, discount: 20, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
-  { id: 8, name: 'Leathery', price: 59.99, rating: 4.7, image: product7, discount: 10, description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita earum neque aut unde hic fugit rem perferendis incidunt esse explicabo doloribus nisi laboriosam vero possimus facere, voluptatibus, id quasi est.' },
+  { id: 1, name: 'Floral', price: 49.99, rating: 4.5, image: product, discount: 20, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 2, name: 'Oriental', price: 59.99, rating: 4.6, image: product1, discount: 15, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 3, name: 'Woody', price: 59.99, rating: 4.7, image: product2, discount: 10, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 4, name: 'Fruity', price: 69.99, rating: 4.8, image: product3, discount: 0, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 5, name: 'Citrus', price: 69.99, rating: 4.8, image: product4, discount: 0, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 6, name: 'Aromatic', price: 49.99, rating: 4.4, image: product5, discount: 10, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 7, name: 'Chypre', price: 59.99, rating: 4.6, image: product6, discount: 20, description: 'Lorem ipsum dolor sit amet...' },
+  { id: 8, name: 'Leathery', price: 59.99, rating: 4.7, image: product7, discount: 10, description: 'Lorem ipsum dolor sit amet...' },
 ];
 
 const BuyNow = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const product = products.find((p) => p.id === parseInt(id));
 
   const [wishlistItems, setWishlistItems] = useState(new Set());
   const [cartItems, setCartItems] = useState(new Set());
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -42,6 +42,9 @@ const BuyNow = () => {
   const originalPrice = (product.price * 133).toFixed(0);
 
   const relatedProducts = products.filter((p) => p.id !== product.id);
+
+  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   return (
     <>
@@ -75,11 +78,30 @@ const BuyNow = () => {
               )}
             </div>
 
-            <p className="text-gray-700 mb-8 text-xl">{product.description}</p>
+            <p className="text-gray-700 mb-6 text-xl">{product.description}</p>
+
+            <div className="flex items-center mb-6 space-x-4">
+              <span className="text-xl font-semibold">Quantity:</span>
+              <div className="flex items-center border border-gray-300 rounded-md">
+                <button
+                  onClick={decreaseQuantity}
+                  className="px-3 py-1 text-xl font-bold text-pink-700 hover:text-pink-900"
+                >
+                  -
+                </button>
+                <span className="px-4 py-1 text-lg">{quantity}</span>
+                <button
+                  onClick={increaseQuantity}
+                  className="px-3 py-1 text-xl font-bold text-pink-700 hover:text-pink-900"
+                >
+                  +
+                </button>
+              </div>
+            </div>
 
             <div className="flex space-x-6">
               <button
-                onClick={() => navigate('/checkout', { state: { product } })}
+                onClick={() => navigate('/checkout', { state: { product, quantity } })}
                 className="bg-pink-700 hover:bg-pink-900 text-white px-8 py-3 rounded-md font-semibold text-lg"
               >
                 Buy
@@ -95,7 +117,6 @@ const BuyNow = () => {
         </div>
       </div>
 
-      {/* YOU MAY ALSO LIKE Section */}
       <div className="my-12">
         <h2 className="text-3xl font-bold text-pink-900 text-center mb-6">You May Also Like</h2>
         <Products

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FiMenu, FiUser, FiSearch, FiHeart, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ wishlistCount = 0, cartCount = 0, wishlistItems = [], cartItems = [] }) => {
+const Header = ({ wishlistCount = 0, wishlistItems = [], cartItems = [], setCartItems }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
@@ -29,15 +29,23 @@ const Header = ({ wishlistCount = 0, cartCount = 0, wishlistItems = [], cartItem
   }, [cartItems]);
 
   const handleQuantityChange = (id, delta) => {
-  const updated = localCartItems
-    .map((item) =>
-      item.id === id
-        ? { ...item, quantity: item.quantity + delta }
-        : item
-    )
-    .filter((item) => item.quantity > 0); // remove items with quantity 0
-  setLocalCartItems(updated);
-};
+    const updated = localCartItems.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + delta } : item
+    );
+
+    if (updated) {
+      const itemWithZero = updated.find((up) => up.quantity === 0)?.id;
+
+      if (itemWithZero) {
+        setCartItems((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(itemWithZero);
+          return newSet;
+        });
+      }
+    }
+    setLocalCartItems(updated);
+  };
 
 
   const calculateItemTotal = (item) => {
@@ -71,6 +79,8 @@ const Header = ({ wishlistCount = 0, cartCount = 0, wishlistItems = [], cartItem
     { id: 5, name: "About", link: "#about" },
     { id: 6, name: "Contact", link: "#contact" },
   ];
+
+  const cartCount = localCartItems.length
 
   return (
     <header className="sticky top-0 z-50 transition-all duration-300">

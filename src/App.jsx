@@ -24,6 +24,8 @@ import product7 from './assets/product7.png';
 const App = () => {
   const [wishlistItems, setWishlistItems] = useState(new Set());
   const [cartItems, setCartItems] = useState(new Set());
+  console.log(cartItems);
+  
 
   const products = [
     { id: 1, name: "Floral", price: 49.99, rating: 4.5, image: product, discount: 20 },
@@ -47,7 +49,6 @@ const App = () => {
     <Router>
       <Header
         wishlistCount={wishlistItems.size}
-        cartCount={cartItems.size}
         wishlistItems={wishlistProducts}
         cartItems={cartProducts}
         setCartItems={setCartItems}

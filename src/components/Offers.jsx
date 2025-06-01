@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FiClock, FiGift, FiPercent } from "react-icons/fi";
 
 
 const Offers = () => {
-    const currentOffers = [
+    const [currentOffers , setCurrentOffers] = useState([
         {
             id: 1,
             title: "Hot Summer Sale",
@@ -12,7 +12,8 @@ const Offers = () => {
             endDate: '2025-05-25',
             code: "SUMMER30",
             bgColor: 'bg-amber-200',
-            textColor: "text-amber-700"
+            textColor: "text-amber-700",
+            claim : false
         },
         {
             id: 2,
@@ -22,7 +23,8 @@ const Offers = () => {
             endDate: '2025-06-25',
             code: "FREEPERFUME",
             bgColor: 'bg-purple-200',
-            textColor: "text-purple-700"
+            textColor: "text-purple-700",
+            claim : false
         },
         {
             id: 3,
@@ -32,9 +34,10 @@ const Offers = () => {
             endDate: '2025-06-10',
             code: "NEW20",
             bgColor: 'bg-pink-200',
-            textColor: "text-pink-700"
+            textColor: "text-pink-700",
+            claim : false
         },
-    ]
+    ])
   return (
     <section id='offers' className='container scroll-mt-20 mx-auto px-4 py-12'>
         <h2 className='text-3xl font-bold text-center mb-2 text-amber-900'>Special Offers</h2>
@@ -69,8 +72,18 @@ const Offers = () => {
                                  <p className='text-sm text-gray-500 mb-1'>Use Code</p>
                                  <p className='font-mono font-bold text-lg'>{offer.code}</p>
                             </div>
-                            <button className={`w-full py-3 rounded-lg ${offer.textColor} font-semibold border ${offer.textColor.replace('text','border')} hover:bg-white`}>
-                                 Claim Offer
+                            <button 
+                           onClick={() => {
+                                setCurrentOffers((prevOffers) =>
+                                prevOffers.map((o) =>
+                      o.id === offer.id ? { ...o, claim: !o.claim } : o
+                    )
+                  );
+                }}
+                            className={`w-full py-3 rounded-lg ${offer.textColor} font-semibold border ${offer.textColor.replace('text','border')} hover:bg-white`}>
+                                 {
+                                    offer.claim ? "Already claimed" : "Claim Offer"
+                                 }
                             </button>
                         </div>
                     </div>
